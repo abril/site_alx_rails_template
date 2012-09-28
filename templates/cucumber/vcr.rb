@@ -1,7 +1,7 @@
-require 'rails'
+require 'vcr'
 
 VCR.configure do |c|
-  c.cassette_library_dir = File.join(Rails.root, 'features/fixtures')
+  c.cassette_library_dir = File.join(Rails.root, 'features/fixtures') if Rails.root.present?
   c.hook_into :webmock
   c.ignore_localhost = true
   c.default_cassette_options = { :record => :once }

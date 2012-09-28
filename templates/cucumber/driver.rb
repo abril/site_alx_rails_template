@@ -1,4 +1,6 @@
-require 'selenium/webdriver/remote/http/curb'
+require 'capybara'
+require 'selenium/webdriver'
+require 'active_support/core_ext'
 
 Capybara.register_driver :selenium_with_long_timeout do |app|
   client = Selenium::WebDriver::Remote::Http::Curb.new
