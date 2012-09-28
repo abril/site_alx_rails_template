@@ -1,0 +1,17 @@
+default: &default
+  abrio:
+    login: abril
+    key: 1234567890
+
+development:
+  <<: *default
+test:
+  <<: *default
+dev:
+  <<: *default
+qa:
+  <<: *default
+stage:
+  <<: *default
+production:
+  <<: *default
