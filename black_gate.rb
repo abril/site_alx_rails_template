@@ -83,6 +83,23 @@ duplicate_file "config/environments/development.rb", "config/environments/dev.rb
 duplicate_file "config/environments/production.rb", "config/environments/qa.rb"
 duplicate_file "config/environments/production.rb", "config/environments/stage.rb"
 
+remove_dir "app"
+#remove_dir "app/assets"
+#remove_dir "app/controllers"
+#remove_dir "app/helpers"
+#remove_dir "app/mailers"
+#remove_dir "app/models"
+#remove_dir "app/views"
+remove_dir "db"
+remove_dir "lib/assets"
+remove_file "public/404.html"
+remove_file "public/422.html"
+remove_file "public/500.html"
+remove_file "public/index.html"
+remove_file "public/robots.txt"
+remove_dir "test"
+remove_dir "vendor"
+
 application(nil, :env => "development") do
   "
   config.after_initialize do
@@ -112,4 +129,10 @@ after_bundle do
   end
 
   create_file "features/support/page_models/.gitkeep"
+
+  comment_lines "spec/spec_helper.rb", /^\s*config\.(fixture|use_transactional|infer_base_class)/
+  gsub_file "spec/spec_helper.rb", /^\s*#.*\n/, ""
+  %w[restfulie vcr].each do |rspec_file|
+    get "https://raw.github.com/abril/mordor-rails_template/master/templates/rspec/#{rspec_file}.rb", "spec/support/#{rspec_file}.rb"
+  end
 end
