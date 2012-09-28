@@ -38,16 +38,20 @@ require "action_mailer/railtie"
 require "sprockets/railtie"}
 
 gsub_file "config/application.rb", %r{    # config.i18n.default_locale = :de}, '    config.i18n.default_locale = :"pt-BR"'
+comment_lines "config/application.rb", /active_record/
+
+comment_lines "config/environments/development.rb", /active_record/
 
 remove_file 'config/database.yml'
 
 gsub_file "config/routes.rb", /^\s*#.*\n/, ""
 
 application(nil, :env => "development") do
-  #config.after_initialize do
-  #  ActionController::Base.asset_host = lambda { |file,request| "#{request.scheme}://#{request.host_with_port}" }
-  #end
-  "config.asset_host = 'http://localhost:3000'"
+  "
+  config.after_initialize do
+    ActionController::Base.asset_host = lambda { |file,request| \"\#{request.scheme}://\#{request.host_with_port}\" }
+  end
+  "
 end
 
 #get "dealgumlugar", "site_engine"
