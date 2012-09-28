@@ -1,0 +1,49 @@
+common: &default_settings
+  license_key: '01234567890123456789'
+  monitor_mode: true
+  developer_mode: false
+  log_level: info
+  ssl: false
+  apdex_t: 0.7
+  capture_params: true
+  transaction_tracer:
+    enabled: true
+    transaction_threshold: apdex_f
+    record_sql: off
+    stack_trace_threshold: 0.500
+  error_collector:
+    enabled: true
+    capture_source: true
+    ignore_errors: ActionController::RoutingError
+
+development:
+  <<: *default_settings
+  app_name: 'Site <%= app_const_base %> | Development'
+  monitor_mode: false
+  developer_mode: true
+  textmate: true
+
+dev:
+  <<: *default_settings
+  app_name: 'Site <%= app_const_base %> | Dev'
+  monitor_mode: false
+  developer_mode: true
+  textmate: true
+
+test:
+  <<: *default_settings
+  monitor_mode: false
+
+qa:
+  <<: *default_settings
+  app_name: 'Site <%= app_const_base %> | QA'
+
+stage:
+  <<: *default_settings
+  app_name: 'Site <%= app_const_base %> | Staging'
+
+production:
+  license_key: '1111111111111111111111111'
+  app_name: 'Site <%= app_const_base %> | Production'
+  transaction_tracer:
+    record_sql: true
