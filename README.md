@@ -4,4 +4,4 @@ Responsável por criar um projeto rails com as dependencias que precisamos para 
 
 # Como Usar
 
-rails new MyAPP -m https://abril.codebasehq.com/projects/migracao/repositories/mordor-rails_template/raw/master/projeto_default.rb
+rails new MyAPP -m https://raw.github.com/abril/mordor-rails_template/master/black_gate.rb
