@@ -27,6 +27,10 @@ class Rails::Generators::AppBase
   end
 end
 
+comment_lines "Gemfile", /sqlite3/
+comment_lines "Gemfile", /coffee-rails/
+comment_lines "Gemfile", /coffee-rails/
+
 add_source "http://gems.abrdigital.com.br"
 
 gem 'newrelic_rpm'
@@ -76,6 +80,7 @@ comment_lines "config/environments/development.rb", /active_record/
 
 remove_file 'config/database.yml'
 
+gsub_file "Gemfile", /^\s*#.*\n/, ""
 gsub_file "config/routes.rb", /^\s*#.*\n/, ""
 gsub_file "config/environments/test.rb", /^\s*#.*\n/, ""
 gsub_file "config/environments/production.rb", /^\s*#.*\n/, ""
@@ -115,10 +120,11 @@ get "https://raw.github.com/abril/mordor-rails_template/master/templates/zapt_in
 get_template "https://raw.github.com/abril/mordor-rails_template/master/templates/newrelic.yml", "config/newrelic.yml"
 
 after_bundle do
-  invoke "abril:devops:install"
-  invoke "rspec:install"
-  invoke "cucumber:install"
-  invoke "alexandria_boilerplate:boilerplate"
+  generate "abril:devops:install", app_name
+  generate "rspec:install"
+  generate "cucumber:install"
+  generate "alexandria_boilerplate:boilerplate", app_name
+  generate "site_engine:structure"
 
   comment_lines "features/support/env.rb", /^(begin|\s+DatabaseCleaner|rescue|\s+raise|end|Cucumber::Rails::Database.javascript)/
   gsub_file "features/support/env.rb", /^\s*#.*\n/, ""
