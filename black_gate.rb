@@ -30,6 +30,11 @@ end
 comment_lines "Gemfile", /sqlite3/
 comment_lines "Gemfile", /coffee-rails/
 comment_lines "Gemfile", /coffee-rails/
+comment_lines "Gemfile", %r{group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+
+  gem 'uglifier', '>= 1.0.3'
+end}
 
 add_source "http://gems.abrdigital.com.br"
 
