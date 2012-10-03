@@ -41,6 +41,7 @@ gem 'site_helpers-video'
 
 gem_group :development, :test do
   gem "mordor-devops"
+  gem "alexandria_boilerplate"
   gem 'step-up'
   gem 'rspec-rails'
   gem 'vcr'
