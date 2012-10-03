@@ -79,6 +79,7 @@ comment_lines "config/application.rb", /config.assets.enabled/
 comment_lines "config/application.rb", /active_record/
 
 comment_lines "config/environments/development.rb", /active_record/
+comment_lines "config/environments/test.rb", /active_record/
 
 remove_file 'config/database.yml'
 
