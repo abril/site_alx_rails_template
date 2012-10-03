@@ -31,7 +31,7 @@ add_source "http://gems.abrdigital.com.br"
 
 gem 'newrelic_rpm'
 
-gem "site_engine"
+gem "site_engine2"
 gem 'seed_pot'
 gem "zapt_in"
 
