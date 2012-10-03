@@ -118,6 +118,7 @@ after_bundle do
   invoke "abril:devops:install"
   invoke "rspec:install"
   invoke "cucumber:install"
+  invoke "alexandria_boilerplate:boilerplate"
 
   comment_lines "features/support/env.rb", /^(begin|\s+DatabaseCleaner|rescue|\s+raise|end|Cucumber::Rails::Database.javascript)/
   gsub_file "features/support/env.rb", /^\s*#.*\n/, ""
