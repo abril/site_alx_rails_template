@@ -40,17 +40,11 @@ add_source "http://gems.abrdigital.com.br"
 
 gem 'newrelic_rpm'
 
-gem "site_engine2"
-gem 'seed_pot'
-gem "zapt_in"
-
-gem 'site_helpers-chamada'
-gem 'site_helpers-materia'
-gem 'site_helpers-video'
+gem "site_engine", "> 2.0.0"
 
 gem_group :development, :test do
   gem "mordor-devops"
-  gem "alexandria_boilerplate"
+  gem "alexandria_boilerplate", ">= 0.0.3"
   gem 'step-up'
   gem 'rspec-rails'
   gem 'vcr'
@@ -97,13 +91,12 @@ duplicate_file "config/environments/development.rb", "config/environments/dev.rb
 duplicate_file "config/environments/production.rb", "config/environments/qa.rb"
 duplicate_file "config/environments/production.rb", "config/environments/stage.rb"
 
-remove_dir "app"
-#remove_dir "app/assets"
-#remove_dir "app/controllers"
-#remove_dir "app/helpers"
-#remove_dir "app/mailers"
-#remove_dir "app/models"
-#remove_dir "app/views"
+remove_file "README.rdoc"
+remove_dir "app/assets"
+remove_dir "app/helpers"
+remove_dir "app/mailers"
+remove_dir "app/models"
+remove_dir "app/views"
 remove_dir "db"
 remove_dir "lib/assets"
 remove_file "public/404.html"
@@ -122,7 +115,8 @@ application(nil, :env => "development") do
   "
 end
 
-get "https://raw.github.com/abril/mordor-rails_template/master/templates/site_engine.rb", "config/initializers/site_engine.rb"
+get "https://raw.github.com/abril/mordor-rails_template/master/templates/site_config.rb", "config/initializers/site_engine.rb"
+get "https://raw.github.com/abril/mordor-rails_template/master/templates/README.md", "README.md"
 get "https://raw.github.com/abril/mordor-rails_template/master/templates/pt-BR.yml", "config/locales/pt-BR.yml"
 get "https://raw.github.com/abril/mordor-rails_template/master/templates/zapt_in.yml", "config/zapt_in.yml"
 get_template "https://raw.github.com/abril/mordor-rails_template/master/templates/newrelic.yml", "config/newrelic.yml"
