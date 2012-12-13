@@ -115,11 +115,11 @@ application(nil, :env => "development") do
   "
 end
 
-get "https://raw.github.com/abril/mordor-rails_template/master/templates/site_config.rb", "config/initializers/site_engine.rb"
-get "https://raw.github.com/abril/mordor-rails_template/master/templates/README.md", "README.md"
-get "https://raw.github.com/abril/mordor-rails_template/master/templates/pt-BR.yml", "config/locales/pt-BR.yml"
-get "https://raw.github.com/abril/mordor-rails_template/master/templates/zapt_in.yml", "config/zapt_in.yml"
-get_template "https://raw.github.com/abril/mordor-rails_template/master/templates/newrelic.yml", "config/newrelic.yml"
+get "https://raw.github.com/abril/site_alx_rails_template/master/templates/site_config.rb", "config/initializers/site_engine.rb"
+get "https://raw.github.com/abril/site_alx_rails_template/master/templates/README.md", "README.md"
+get "https://raw.github.com/abril/site_alx_rails_template/master/templates/pt-BR.yml", "config/locales/pt-BR.yml"
+get "https://raw.github.com/abril/site_alx_rails_template/master/templates/abrio.yml", "config/abrio.yml"
+get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/newrelic.yml", "config/newrelic.yml"
 
 after_bundle do
   generate "abril:devops:install", app_name
@@ -132,10 +132,10 @@ after_bundle do
   gsub_file "features/support/env.rb", /^\s*#.*\n/, ""
 
   %w[driver failfast page_models restfulie vcr].each do |cucumber_file|
-    get "https://raw.github.com/abril/mordor-rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
+    get "https://raw.github.com/abril/site_alx_rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
   end
   %w[headless hostname].each do |cucumber_file|
-    get_template "https://raw.github.com/abril/mordor-rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
+    get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
   end
 
   create_file "features/support/page_models/.gitkeep"
@@ -143,6 +143,6 @@ after_bundle do
   comment_lines "spec/spec_helper.rb", /^\s*config\.(fixture|use_transactional|infer_base_class)/
   gsub_file "spec/spec_helper.rb", /^\s*#.*\n/, ""
   %w[restfulie vcr].each do |rspec_file|
-    get "https://raw.github.com/abril/mordor-rails_template/master/templates/rspec/#{rspec_file}.rb", "spec/support/#{rspec_file}.rb"
+    get "https://raw.github.com/abril/site_alx_rails_template/master/templates/rspec/#{rspec_file}.rb", "spec/support/#{rspec_file}.rb"
   end
 end
