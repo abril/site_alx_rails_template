@@ -73,6 +73,15 @@ require "sprockets/railtie"}
 
 gsub_file "config/application.rb", %r{    # config.i18n.default_locale = :de}, '    config.i18n.default_locale = :"pt-BR"'
 
+gsub_file("app/controllers/application_controller.rb", /class ApplicationController < ActionController::Base/mi) do
+  <<-EOS.gsub(/^  /, '')
+  class ApplicationController < ActionController::Base
+    before_filter do
+      response.headers["Vary"] = "X-Device"
+    end
+  EOS
+end
+
 comment_lines "config/application.rb", /config.assets.enabled/
 
 comment_lines "config/application.rb", /active_record/
