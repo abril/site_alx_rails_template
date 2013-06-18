@@ -40,7 +40,7 @@ add_source "http://gems.abrdigital.com.br"
 
 gem 'newrelic_rpm'
 
-gem "site_engine", ">= 2.1.4"
+gem "site_engine", ">= 2.2.2"
 
 gem_group :development, :test do
   gem "mordor-devops"
