@@ -43,7 +43,6 @@ gem 'newrelic_rpm'
 gem "site_engine", ">= 2.2.2"
 
 gem_group :development, :test do
-  gem "mordor-devops"
   gem "alexandria_boilerplate", ">= 0.0.3"
   gem 'step-up'
   gem 'rspec-rails'
@@ -131,7 +130,6 @@ get "https://raw.github.com/abril/site_alx_rails_template/master/templates/abrio
 get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/newrelic.yml", "config/newrelic.yml"
 
 after_bundle do
-  generate "abril:devops:install", app_name
   generate "rspec:install"
   generate "cucumber:install"
   generate "alexandria_boilerplate:boilerplate", app_name
