@@ -1,4 +1,22 @@
 require 'fileutils'
+require 'thor'
+
+class SiteAlexandriaGenerator < Thor
+  class_option :skip_rally, type: :boolean
+  class_option :skip_boilerplate, type: :boolean
+  class_option :skip_tests, type: :boolean
+  class_option :skip_structure, type: :boolean
+  class_option :skip_dev_tools, type: :boolean
+  class_option :add_newrelic, type: :boolean
+end
+
+alx_opts = SiteAlexandriaGenerator.new([], ARGV).options
+
+if alx_opts.skip_dev_tools?
+  alx_opts = SiteAlexandriaGenerator.new([], (ARGV + [
+    '--skip-rally', '--skip-boilerplate', '--skip-tests'
+  ]).uniq).options
+end
 
 def duplicate_file(source, destination)
   say_status :duplicate_file, destination
@@ -29,7 +47,6 @@ end
 
 comment_lines "Gemfile", /sqlite3/
 comment_lines "Gemfile", /coffee-rails/
-comment_lines "Gemfile", /coffee-rails/
 comment_lines "Gemfile", %r{group :assets do
   gem 'sass-rails',   '~> 3.2.3'
 
@@ -38,33 +55,37 @@ end}
 
 add_source "http://gems.abrdigital.com.br"
 
-gem 'newrelic_rpm'
+gem 'newrelic_rpm' if alx_opts.add_newrelic?
 
 gem "site_engine", ">= 2.2.2"
 
 gem_group :development, :test do
-  gem "alexandria_boilerplate", ">= 0.0.3"
+  gem "alexandria_boilerplate", ">= 0.0.3" unless alx_opts.skip_boilerplate?
   gem 'step-up'
-  gem 'rspec-rails'
-  gem 'vcr'
-  gem 'jasmine'
-  gem 'headless'
-  gem 'rally_rest_api'
+  unless alx_opts.skip_tests?
+    gem 'rspec-rails'
+    gem 'vcr'
+    gem 'jasmine'
+    gem 'headless'
+  end
+  gem 'rally_rest_api' unless alx_opts.skip_rally?
 end
 
-gem_group :test do
-  gem "cucumber-rails"
-  gem "selenium-webdriver"
-  gem 'webmock'
-  gem "capybara"
-  gem "curb"
+unless alx_opts.skip_tests?
+  gem_group :test do
+    gem "cucumber-rails"
+    gem "selenium-webdriver"
+    gem 'webmock'
+    gem "capybara"
+    gem "curb"
+  end
 end
 
 append_file "Rakefile", "
 task :test => [:spec, :'jasmine:ci', :cucumber]
 
 Rake::Task[:default].clear_prerequisites
-task :default => [:test]"
+task :default => [:test]" unless alx_opts.skip_tests?
 
 gsub_file "config/application.rb", %r{require 'rails/all'}, %{require "action_controller/railtie"
 require "action_mailer/railtie"
@@ -127,29 +148,31 @@ get "https://raw.github.com/abril/site_alx_rails_template/master/templates/site_
 get "https://raw.github.com/abril/site_alx_rails_template/master/templates/README.md", "README.md"
 get "https://raw.github.com/abril/site_alx_rails_template/master/templates/pt-BR.yml", "config/locales/pt-BR.yml"
 get "https://raw.github.com/abril/site_alx_rails_template/master/templates/abrio.yml", "config/abrio.yml"
-get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/newrelic.yml", "config/newrelic.yml"
+get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/newrelic.yml", "config/newrelic.yml" if alx_opts.add_newrelic?
 
 after_bundle do
-  generate "rspec:install"
-  generate "cucumber:install"
-  generate "alexandria_boilerplate:boilerplate", app_name
-  generate "site_engine:structure"
+  generate "alexandria_boilerplate:boilerplate", app_name unless alx_opts.skip_boilerplate?
+  generate "site_engine:structure" unless alx_opts.skip_structure
 
-  comment_lines "features/support/env.rb", /^(begin|\s+DatabaseCleaner|rescue|\s+raise|end|Cucumber::Rails::Database.javascript)/
-  gsub_file "features/support/env.rb", /^\s*#.*\n/, ""
+  unless alx_opts.skip_tests?
+    generate "rspec:install"
+    generate "cucumber:install"
+    comment_lines "features/support/env.rb", /^(begin|\s+DatabaseCleaner|rescue|\s+raise|end|Cucumber::Rails::Database.javascript)/
+    gsub_file "features/support/env.rb", /^\s*#.*\n/, ""
 
-  %w[driver failfast page_models restfulie vcr].each do |cucumber_file|
-    get "https://raw.github.com/abril/site_alx_rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
-  end
-  %w[headless hostname].each do |cucumber_file|
-    get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
-  end
+    %w[driver failfast page_models restfulie vcr].each do |cucumber_file|
+      get "https://raw.github.com/abril/site_alx_rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
+    end
+    %w[headless hostname].each do |cucumber_file|
+      get_template "https://raw.github.com/abril/site_alx_rails_template/master/templates/cucumber/#{cucumber_file}.rb", "features/support/#{cucumber_file}.rb"
+    end
 
-  create_file "features/support/page_models/.gitkeep"
+    create_file "features/support/page_models/.gitkeep"
 
-  comment_lines "spec/spec_helper.rb", /^\s*config\.(fixture|use_transactional|infer_base_class)/
-  gsub_file "spec/spec_helper.rb", /^\s*#.*\n/, ""
-  %w[restfulie vcr].each do |rspec_file|
-    get "https://raw.github.com/abril/site_alx_rails_template/master/templates/rspec/#{rspec_file}.rb", "spec/support/#{rspec_file}.rb"
+    comment_lines "spec/spec_helper.rb", /^\s*config\.(fixture|use_transactional|infer_base_class)/
+    gsub_file "spec/spec_helper.rb", /^\s*#.*\n/, ""
+    %w[restfulie vcr].each do |rspec_file|
+      get "https://raw.github.com/abril/site_alx_rails_template/master/templates/rspec/#{rspec_file}.rb", "spec/support/#{rspec_file}.rb"
+    end
   end
 end
